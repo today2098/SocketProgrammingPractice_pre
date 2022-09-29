@@ -13,7 +13,7 @@ int main() {
     struct sockaddr_in client;
     socklen_t len;
     int sock;
-    int res;
+    int err;
 
     /* ソケットの作成 */
     sock0 = socket(PF_INET, SOCK_STREAM, 0);
@@ -23,12 +23,12 @@ int main() {
     addr.sin_family = AF_INET;
     addr.sin_port = htons(12345);
     addr.sin_addr.s_addr = INADDR_ANY;
-    res = bind(sock0, (struct sockaddr *)&addr, sizeof(addr));
-    if(res == -1) DieWithSystemMessage("bind()");
+    err = bind(sock0, (struct sockaddr *)&addr, sizeof(addr));
+    if(err == -1) DieWithSystemMessage("bind()");
 
     /* TCPクライアントからの接続要求を待てる状態にする */
-    res = listen(sock0, 5);
-    if(res == -1) DieWithSystemMessage("listen()");
+    err = listen(sock0, 5);
+    if(err == -1) DieWithSystemMessage("listen()");
 
     /* TCPクライアントからの接続要求を受け付ける */
     len = sizeof(client);
@@ -36,16 +36,14 @@ int main() {
     if(sock == -1) DieWithSystemMessage("accept()");
 
     /* 5文字送信 */
-    res = write(sock, "HELLO", 5);
-    if(res == -1) DieWithSystemMessage("write()");
+    err = write(sock, "HELLO", 5);
+    if(err == -1) DieWithSystemMessage("write()");
 
     /* TCPセッションの終了 */
-    res = close(sock);
-    if(res == -1) DieWithSystemMessage("close()");
+    close(sock);
 
     /* listen するsocketの終了 */
-    res = close(sock0);
-    if(res == -1) DieWithSystemMessage("close()");
+    close(sock0);
 
     return 0;
 }

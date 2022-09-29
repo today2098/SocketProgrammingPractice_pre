@@ -14,7 +14,7 @@ int main() {
     int sock;
     char buf[32];
     int n;
-    int res;
+    int err;
 
     /* ソケットの作成 */
     sock = socket(PF_INET, SOCK_STREAM, 0);
@@ -25,12 +25,12 @@ int main() {
     server.sin_port = htons(12345);
 
     /* 127.0.0.1はlocalhost */
-    res = inet_pton(AF_INET, "127.0.0.1", &server.sin_addr.s_addr);
-    if(res == -1) DieWithSystemMessage("inet_pton()");
+    err = inet_pton(AF_INET, "127.0.0.1", &server.sin_addr.s_addr);
+    if(err == -1) DieWithSystemMessage("inet_pton()");
 
     /* サーバに接続 */
-    res = connect(sock, (struct sockaddr *)&server, sizeof(server));
-    if(res == -1) DieWithSystemMessage("connect()");
+    err = connect(sock, (struct sockaddr *)&server, sizeof(server));
+    if(err == -1) DieWithSystemMessage("connect()");
 
     /* サーバからデータを受信 */
     memset(buf, 0, sizeof(buf));
@@ -40,8 +40,7 @@ int main() {
     printf("Message: %s\nSize: %d Byte\n", buf, n);
 
     /* socketの終了 */
-    res = close(sock);
-    if(res == -1) DieWithSystemMessage("close()");
+    close(sock);
 
     return 0;
 }
