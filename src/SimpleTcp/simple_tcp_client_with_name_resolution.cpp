@@ -21,7 +21,9 @@ int main(int argc, char *argv[]) {
     if(argc != 3) {
         fprintf(stderr,
                 "Simple TCP client with name resolution\n\n"
-                "Usage: program <hostname> <port>\n");
+                "Usage:\n\t%s <hostname> <port>\n\n"
+                "Example:\n\t%s localhost 12345\n",
+                argv[0], argv[0]);
         return 1;
     }
 

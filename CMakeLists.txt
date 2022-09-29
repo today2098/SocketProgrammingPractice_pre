@@ -16,4 +16,5 @@ target_link_libraries(simple_tcp_server.out utility)
 
 # src/test
 add_executable(getaddrinfo.out src/test/getaddrinfo.cpp)
+
 add_executable(perror.out src/test/perror.cpp)
