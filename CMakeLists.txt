@@ -8,6 +8,9 @@ add_library(utility STATIC src/library/die_with_message.cpp)
 add_executable(simple_tcp_client.out src/SimpleTcp/simple_tcp_client.cpp)
 target_link_libraries(simple_tcp_client.out utility)
 
+add_executable(simple_tcp_client_with_name_resolution.out src/SimpleTcp/simple_tcp_client_with_name_resolution.cpp)
+target_link_libraries(simple_tcp_client_with_name_resolution.out utility)
+
 add_executable(simple_tcp_server.out src/SimpleTcp/simple_tcp_server.cpp)
 target_link_libraries(simple_tcp_server.out utility)
 
