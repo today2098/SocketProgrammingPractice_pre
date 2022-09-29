@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     int sock;
     char buf[32];
     int n;
-    int err;
+    int ret;
 
     if(argc != 3) {
         fprintf(stderr,
@@ -32,10 +32,10 @@ int main(int argc, char *argv[]) {
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = SOCK_STREAM;
-    hints.ai_family = PF_UNSPEC;  // プロトコルは指定しない．IPv4 or IPv6.
-    err = getaddrinfo(hostname, portnum, &hints, &res0);
-    if(err != 0) {
-        fprintf(stderr, "error %d: %s\n", err, gai_strerror(err));
+    hints.ai_family = AF_UNSPEC;  // プロトコルは指定しない．IPv4 or IPv6.
+    ret = getaddrinfo(hostname, portnum, &hints, &res0);
+    if(ret != 0) {
+        fprintf(stderr, "error %d: %s\n", ret, gai_strerror(ret));
         DieWithSystemMessage("getaddrinfo()");
     }
 
@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
         if(sock == -1) continue;
 
         /* ソケットが生成できたらサーバへ接続を試みる */
-        err = connect(sock, res->ai_addr, res->ai_addrlen);
-        if(err == -1) {  // 失敗したらリストの次の項目を試す．
+        ret = connect(sock, res->ai_addr, res->ai_addrlen);
+        if(ret == -1) {  // 失敗したらリストの次の項目を試す．
             close(sock);
             sock = -1;
             continue;

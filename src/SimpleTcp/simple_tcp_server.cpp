@@ -5,7 +5,7 @@
 
 #include <cstdio>
 
-#include "../library/utility.hpp"
+#include "../library/utility.hpp"  // for DieWithSystemMessage().
 
 int main() {
     int sock0;
@@ -13,7 +13,7 @@ int main() {
     struct sockaddr_in client;
     socklen_t len;
     int sock;
-    int err;
+    int ret;
 
     /* ソケットの作成 */
     sock0 = socket(PF_INET, SOCK_STREAM, 0);
@@ -23,12 +23,12 @@ int main() {
     addr.sin_family = AF_INET;
     addr.sin_port = htons(12345);
     addr.sin_addr.s_addr = INADDR_ANY;
-    err = bind(sock0, (struct sockaddr *)&addr, sizeof(addr));
-    if(err == -1) DieWithSystemMessage("bind()");
+    ret = bind(sock0, (struct sockaddr *)&addr, sizeof(addr));
+    if(ret == -1) DieWithSystemMessage("bind()");
 
     /* TCPクライアントからの接続要求を待てる状態にする */
-    err = listen(sock0, 5);
-    if(err == -1) DieWithSystemMessage("listen()");
+    ret = listen(sock0, 5);
+    if(ret == -1) DieWithSystemMessage("listen()");
 
     /* TCPクライアントからの接続要求を受け付ける */
     len = sizeof(client);
@@ -36,8 +36,8 @@ int main() {
     if(sock == -1) DieWithSystemMessage("accept()");
 
     /* 5文字送信 */
-    err = write(sock, "HELLO", 5);
-    if(err == -1) DieWithSystemMessage("write()");
+    ret = write(sock, "HELLO", 5);
+    if(ret == -1) DieWithSystemMessage("write()");
 
     /* TCPセッションの終了 */
     close(sock);

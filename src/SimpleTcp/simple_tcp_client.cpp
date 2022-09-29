@@ -7,14 +7,14 @@
 #include <cstdio>
 #include <cstring>
 
-#include "../library/utility.hpp"
+#include "../library/utility.hpp"  // for DieWithSystemMessage().
 
 int main() {
-    struct sockaddr_in server;
     int sock;
+    struct sockaddr_in server;
     char buf[32];
     int n;
-    int err;
+    int ret;
 
     /* ソケットの作成 */
     sock = socket(PF_INET, SOCK_STREAM, 0);
@@ -25,12 +25,11 @@ int main() {
     server.sin_port = htons(12345);
 
     /* 127.0.0.1はlocalhost */
-    err = inet_pton(AF_INET, "127.0.0.1", &server.sin_addr.s_addr);
-    if(err == -1) DieWithSystemMessage("inet_pton()");
+    inet_pton(AF_INET, "127.0.0.1", &server.sin_addr.s_addr);
 
     /* サーバに接続 */
-    err = connect(sock, (struct sockaddr *)&server, sizeof(server));
-    if(err == -1) DieWithSystemMessage("connect()");
+    ret = connect(sock, (struct sockaddr *)&server, sizeof(server));
+    if(ret == -1) DieWithSystemMessage("connect()");
 
     /* サーバからデータを受信 */
     memset(buf, 0, sizeof(buf));
