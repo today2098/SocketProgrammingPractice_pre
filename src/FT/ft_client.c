@@ -10,7 +10,6 @@
 #include "../library/utility.h"  // for DieWithSystemMessage().
 
 int main(int argc, char *argv[]) {
-    char filepath[128];
     int fd;
     int sock;
     struct sockaddr_in server;
