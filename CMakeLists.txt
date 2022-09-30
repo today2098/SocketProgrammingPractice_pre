@@ -18,6 +18,9 @@ target_link_libraries(simple_tcp_server.out utility)
 add_executable(ft_client.out src/FT/ft_client.c)
 target_link_libraries(ft_client.out utility)
 
+add_executable(ft_client_with_name_resolution.out src/FT/ft_client_with_name_resolution.c)
+target_link_libraries(ft_client_with_name_resolution.out utility)
+
 add_executable(ft_server.out src/FT/ft_server.c)
 target_link_libraries(ft_server.out utility)
 
