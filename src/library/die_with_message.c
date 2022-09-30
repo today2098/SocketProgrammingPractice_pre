@@ -1,8 +1,8 @@
-#include <cerrno>
-#include <cstdio>
-#include <cstdlib>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#include "utility.hpp"
+#include "utility.h"
 
 void DieWithSystemMessage(const char *msg) {
     perror(msg);

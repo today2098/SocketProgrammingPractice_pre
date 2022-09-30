@@ -1,19 +1,38 @@
+#include <fcntl.h>
 #include <netinet/in.h>
+#include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <cstdio>
+#include "../library/utility.h"  // for DieWithSystemMessage().
 
-#include "../library/utility.hpp"  // for DieWithSystemMessage().
+int main(int argc, char *argv[]) {
+    const char OUTPUT_DIR[] = "output/";
 
-int main() {
-    int sock0;
+    char filepath[128];
+    int fd;
+    int sock0, sock;
     struct sockaddr_in addr;
     struct sockaddr_in client;
     socklen_t len;
-    int sock;
+    char buf[65536];
+    int n;
     int ret;
+
+    if(argc != 2) {
+        fprintf(stderr,
+                "File transport server\n\n"
+                "Usage:\n\t%s <outputfilename>\n\n"
+                "Example:\n\t%s data.jpg\n",
+                argv[0], argv[0]);
+        return 1;
+    }
+
+    snprintf(filepath, 128, "%s%s", OUTPUT_DIR, argv[1]);
+    fd = open(filepath, O_WRONLY | O_CREAT, 0600);  // 0600 -> "-rw-------"
+    if(fd == -1) DieWithSystemMessage("open()");
 
     /* ソケットの作成 */
     sock0 = socket(PF_INET, SOCK_STREAM, 0);
@@ -35,9 +54,13 @@ int main() {
     sock = accept(sock0, (struct sockaddr *)&client, &len);
     if(sock == -1) DieWithSystemMessage("accept()");
 
-    /* 5文字送信 */
-    ret = write(sock, "HELLO", 5);
-    if(ret == -1) DieWithSystemMessage("write()");
+    while((n = read(sock, buf, sizeof(buf))) > 0) {
+        ret = write(fd, buf, n);
+        if(ret < 1) {
+            perror("write()");
+            break;
+        }
+    }
 
     /* TCPセッションの終了 */
     close(sock);

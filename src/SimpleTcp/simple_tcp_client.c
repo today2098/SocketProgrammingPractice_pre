@@ -1,35 +1,19 @@
 #include <arpa/inet.h>
-#include <fcntl.h>
 #include <netinet/in.h>
+#include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <cstdio>
-#include <cstring>
+#include "../library/utility.h"  // for DieWithSystemMessage().
 
-#include "../library/utility.hpp"  // for DieWithSystemMessage().
-
-int main(int argc, char *argv[]) {
-    char filepath[128];
-    int fd;
+int main() {
     int sock;
     struct sockaddr_in server;
-    char buf[65536];
+    char buf[32];
     int n;
     int ret;
-
-    if(argc != 2) {
-        fprintf(stderr,
-                "File transport client\n\n"
-                "Usage:\n\t%s <filename>\n\n"
-                "Example:\n\t%s sample/water.jpg\n",
-                argv[0], argv[0]);
-        return 1;
-    }
-
-    fd = open(argv[1], O_RDONLY);
-    if(fd == -1) DieWithSystemMessage("open()");
 
     /* ソケットの作成 */
     sock = socket(PF_INET, SOCK_STREAM, 0);
@@ -46,13 +30,12 @@ int main(int argc, char *argv[]) {
     ret = connect(sock, (struct sockaddr *)&server, sizeof(server));
     if(ret == -1) DieWithSystemMessage("connect()");
 
-    while((n = read(fd, buf, sizeof(buf))) > 0) {
-        ret = write(sock, buf, n);
-        if(ret < 1) {
-            perror("write()");
-            break;
-        }
-    }
+    /* サーバからデータを受信 */
+    memset(buf, 0, sizeof(buf));
+    n = read(sock, buf, sizeof(buf));
+    if(n == -1) DieWithSystemMessage("read()");
+
+    printf("Message: %s\nSize: %d Byte\n", buf, n);
 
     /* socketの終了 */
     close(sock);

@@ -1,14 +1,13 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <cstdio>
-#include <cstring>
-
-#include "../library/utility.hpp"  // for DieWithSystemMessage().
+#include "../library/utility.h"  // for DieWithSystemMessage().
 
 int main(int argc, char *argv[]) {
     char *hostname, *portnum;

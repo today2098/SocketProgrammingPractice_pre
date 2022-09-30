@@ -1,10 +1,9 @@
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-
-#include <cstdio>
-#include <cstring>
 
 int main() {
     char *hostname = "localhost";
